@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mars Rover Photos</title>
+  <link href="reset.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">  
+</head>
+<body>
+  <header class="header">
+    <div class="header__content">
+      <a href="https://www.nasa.gov/"><img src="images/nasa-logo.png" alt="" class="header__logo-img"></a>
+      <p class="header__content-text">NASA Api demonstrarion</p>
+      <ul class="list">
+        <li class="list__item">
+            <a class="list__link" href="https://twitter.com/NASA?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor">
+                <img class="list__img" src="images/twitter.svg" alt="twitter">
+            </a>
+        </li>
+        <li class="list__item">
+            <a class="list__link" href="https://www.facebook.com/NASA/?locale=ru_RU">
+                <img class="list__img" src="images/facebook.svg" alt="facebook">
+            </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+  <main class="main">
+    <div class="main__content">
+      <h1>Mars Rover Photos</h1>
+      <div class="main__conteiner-select">
+        <form>
+          <label for="rover" class="rover__list"></label>
+            <select id="rover">
+              <option value="curiosity" class="rover__list-item">Curiosity</option>
+              <option value="opportunity" class="rover__list-item">Opportunity</option>
+              <option value="spirit" class="rover__list-item">Spirit</option>
+            </select>
+          </div>
+          <div class="main__conteiner-date">
+            <label for="date"></label>
+            <input type="date" id="date">
+          </div>
+          
+          <div class="main__container-quanity">
+              <input type="text" id="quanity">
+          </div>
+          <div class="main__conteiner-button">
+            <button type="button" onclick="getPhotos()" class="main__button"><i class="fa-solid fa-magnifying-glass"></i></button>
+          </div>
+        </form>
+      
+    </div>
+    <div class="main__conteiner-photo">
+      <div id="photos"></div>
+
+      <script>
+        function getPhotos() {
+          let rover = document.getElementById("rover").value;
+          let date = document.getElementById("date").value;
+          let quanity = document.getElementById("quanity").value;
+
+          let apiUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${rover}/photos?earth_date=${date}&api_key=1aS9iANkTK7FFHnuXOCLFbyWVfKUoZCXuJaWzAFM`;
+
+          fetch(apiUrl)
+                  .then(response => response.json())
+                  .then(data => {
+                    console.log("Количество фото:" , quanity)
+                    let photos = data.photos.slice(0, quanity); // Ограничиваем до 25 фотографий
+                    let photoContainer = document.getElementById("photos");
+                    photoContainer.innerHTML = ""; // Очищаем предыдущие фотографии
+
+                    photos.forEach(photo => {
+                      let img = document.createElement("img");
+                      img.src = photo.img_src;
+                      img.alt = "Mars Rover Photo";
+                      img.className = "photos"
+                      photoContainer.appendChild(img);
+
+                    });
+                  })
+                  .catch(error => {
+                    console.log(error);
+                    alert("An error occurred while fetching photos.");
+                  });
+        }
+      </script>
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="footer__conteiner">
+      <img src="images/nasa-logo-font.png" alt="" class="footer-img">
+      <a href="pc.html" class="footer-pc">Политика конфиденциальности</a>
+    </div>
+  </footer>
+  <script src="https://kit.fontawesome.com/bf645e1b5c.js" crossorigin="anonymous"></script>
+</body>
+</html>
